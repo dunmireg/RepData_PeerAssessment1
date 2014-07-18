@@ -1,0 +1,48 @@
+---
+title: "Reproducible Research Peer Assessment 1"
+output: html_document
+---
+
+
+
+##Part 1: Load the data
+
+Here we will load the data from a zip file (activity.zip) in the working directory into R and prints the first five lines to demonstrate they exist.
+
+```{r}
+data <- read.csv(unzip("activity.zip"))
+head(data)
+```
+
+##Part 2: Total Number of Steps & Mean/Median - Wording Revist!
+
+In this part, we will sum the total number of steps taken in on each day and create a histogram to show the frequency of steps per day 
+
+```{r}
+library(ggplot2)
+totSteps <- aggregate(data$steps ~ data$date, data = data, FUN = sum)
+names(totSteps) <- c("date", "steps")
+ggplot(totSteps, aes(x = totSteps$steps)) + geom_histogram() + xlab("Total number of steps taken per day") +ggtitle("Total Steps Taken")
+```
+
+Now we will calculate and show the mean and median for the total number of steps taken per day
+```{r}
+mean(totSteps$steps)
+median(totSteps$steps)
+```
+
+##Part 3: Average Daily Activity Pattern - Needs labeling
+
+We will make a time series plot of the 5 minute interval and average number of steps taken on all days. 
+
+```{r}
+avgAct <- aggregate(data$steps ~ data$interval, data = data, FUN = mean)
+names(avgAct) <- c("interval", "avgSteps")
+plot(x = avgAct$interval, y = avgAct$avgSteps, type = "l")
+```
+
+Now let us determine which 5 minute interval tends to have the most activity
+```{r}
+avgAct[which.max(avgAct$avgSteps),]
+```
+
