@@ -1,7 +1,4 @@
----
-output:
-  html_document: default
----
+
 # Reproducible Research: Peer Assessment 1
 
 
