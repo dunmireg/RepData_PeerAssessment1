@@ -15,7 +15,7 @@ head(data)
 ## What is mean total number of steps taken per day?
 
 
-In this part, we will sum the total number of steps taken in on each day and create a histogram to show the frequency of steps per day 
+In this part, we will sum the total number of steps taken on each day and create a histogram to show the frequency of steps per day. Note this is not a bar chart of the steps taken "on" a particular day, this shows the distribution of the steps taken across all days. 
 
 ```{r}
 if(require("ggplot2")) {
@@ -37,6 +37,7 @@ mean(totSteps$steps)
 median(totSteps$steps)
 ```
 
+So we can say that across all days the average steps are 10766 and the median is 10765
 
 ## What is the average daily activity pattern?
 
@@ -55,6 +56,7 @@ Now let us determine which 5 minute interval tends to have the most activity
 avgAct[which.max(avgAct$avgSteps),]
 ```
 
+So we see the highest interval corresponds to the 835 minute mark with 206.2 steps
 
 ## Imputing missing values
 
@@ -64,7 +66,7 @@ Let's first see how many NA values are in the steps column of our data
 sum(is.na(data$steps))
 ```
 
-Ok so we see 2304 NA values. Now what I'll do is take the mean of the interval of steps (meaning that the mean of interval 0 across all days) and insert that for every NA value (so all NAs become the mean of the interval into which they fall) and then plot this, similar to the plot above. 
+Ok so we see 2304 NA values. What I'm going to do is get the average for each 5 minute interval across all days, then insert that average for each NA. So for example, if a 0 interval on any day is NA, I will replace that with the average (or expected value) of the 0 interval from all days in our set. 
 
 ```{r}
 activityInterval <- aggregate(data$steps ~ data$interval, data = data, FUN = mean)
