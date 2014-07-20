@@ -1,3 +1,8 @@
+---
+output:
+  html_document:
+    keep_md: yes
+---
 # Reproducible Research: Peer Assessment 1
 
 
@@ -48,7 +53,7 @@ names(totSteps) <- c("date", "steps")
 ggplot(totSteps, aes(x = totSteps$steps)) + geom_histogram(binwidth = 1000) + xlab("Total number of steps taken per day") +ggtitle("Total Steps Taken")
 ```
 
-![plot of chunk unnamed-chunk-2](./PA1_template_files/figure-html/unnamed-chunk-2.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 Now we will calculate and show the mean and median for the total number of steps taken per day
 
@@ -83,7 +88,7 @@ names(avgAct) <- c("interval", "avgSteps")
 plot(x = avgAct$interval, y = avgAct$avgSteps, type = "l", main = "Average Activity at 5 minute Intervals", xlab = "5- min interval", ylab = "Average steps taken (averaged across all days)")
 ```
 
-![plot of chunk unnamed-chunk-4](./PA1_template_files/figure-html/unnamed-chunk-4.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
 Now let us determine which 5 minute interval tends to have the most activity
 
@@ -129,7 +134,7 @@ names(totSteps2) <- c("date", "steps")
 ggplot(totSteps2, aes(x = totSteps2$steps)) + geom_histogram(binwidth = 1000) + xlab("Total number of steps taken per day") +ggtitle("Total Steps Taken With NAs")
 ```
 
-![plot of chunk unnamed-chunk-7](./PA1_template_files/figure-html/unnamed-chunk-7.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
 Now let's see the new mean and median for the data with the NAs filled in: 
 
@@ -171,6 +176,6 @@ avgStepsWeek <- aggregate(steps ~ interval + dayType, data = newdata, FUN = mean
 ggplot(avgStepsWeek, aes(interval, steps)) + geom_line() + facet_grid(dayType~.) + xlab("5 min interval") + ylab("Number of steps") + ggtitle("Average steps taken at 5 min intervals on weekdays vs weekends")
 ```
 
-![plot of chunk unnamed-chunk-10](./PA1_template_files/figure-html/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
-Interestingly, there seems to be more activity in the earlier intervals of the day during the week than the weekend (I would guess because people sleep in but would need more investigation). There is also a large spike of activity during the week in the early part of the chart around the 700-800 mark. 
+Interestingly, there seems to be more activity in the earlier intervals of the day during the week than the weekend (I would guess because people sleep in but would need more investigation). There is also a large spike of activity during the week in the early part of the chart around the 700-800 mark. There also seems to be more variance in the number of steps during the middle portion of the charts on the weekends as opposed to the weekdays (maybe people are running errands vs at their desks). 
