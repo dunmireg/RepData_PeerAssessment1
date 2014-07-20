@@ -14,18 +14,27 @@ data <- read.csv(unzip("activity.zip"))
 head(data)
 ```
 
+
+
 ##Part 2: Total Number of Steps & Mean/Median - Wording Revist!
 
 In this part, we will sum the total number of steps taken in on each day and create a histogram to show the frequency of steps per day 
 
 ```{r}
-library(ggplot2)
+if(require("ggplot2")) {
+  library(ggplot2)
+} else {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+
 totSteps <- aggregate(data$steps ~ data$date, data = data, FUN = sum)
 names(totSteps) <- c("date", "steps")
 ggplot(totSteps, aes(x = totSteps$steps)) + geom_histogram() + xlab("Total number of steps taken per day") +ggtitle("Total Steps Taken")
 ```
 
 Now we will calculate and show the mean and median for the total number of steps taken per day
+
 ```{r}
 mean(totSteps$steps)
 median(totSteps$steps)
@@ -38,11 +47,46 @@ We will make a time series plot of the 5 minute interval and average number of s
 ```{r}
 avgAct <- aggregate(data$steps ~ data$interval, data = data, FUN = mean)
 names(avgAct) <- c("interval", "avgSteps")
-plot(x = avgAct$interval, y = avgAct$avgSteps, type = "l")
+plot(x = avgAct$interval, y = avgAct$avgSteps, type = "l", main = "Average Activity at 5 minute Intervals", xlab = "5- min interval", ylab = "Average steps taken (averaged across all days)")
 ```
 
 Now let us determine which 5 minute interval tends to have the most activity
+
 ```{r}
 avgAct[which.max(avgAct$avgSteps),]
 ```
 
+
+
+##Part 4: Dealing with NAs
+
+Let's first see how many NA values are in the steps column of our data
+
+```{r} 
+sum(is.na(data$steps))
+```
+
+Ok so we see 2304 NA values. Now what I'll do is take the mean of the interval of steps (meaning that the mean of interval 0 across all days) and insert that for every NA value (so all NAs become the mean of the interval into which they fall) and then plot this, similar to the plot above. 
+
+```{r}
+activityInterval <- aggregate(data$steps ~ data$interval, data = data, FUN = mean)
+names(activityInterval) <- c("interval", "avgSteps")
+newdata <- merge(data, activityInterval, by = "interval")
+for(i in 1:length(newdata$steps)) {
+     if(is.na(newdata[i,2])) {
+         newdata[i,2] <- newdata[i,4]
+     }
+ }
+totSteps2 <- aggregate(newdata$steps ~ newdata$date, data = newdata, FUN = sum)
+names(totSteps2) <- c("date", "steps")
+ggplot(totSteps2, aes(x = totSteps2$steps)) + geom_histogram() + xlab("Total number of steps taken per day") +ggtitle("Total Steps Taken With NAs")
+```
+
+Now let's see the new mean and median for the data with the NAs filled in: 
+
+```{r}
+mean(totSteps2$steps)
+median(totSteps2$steps)
+```
+
+This is interesting: the mean and median remain virtually unchanged and the histogram shows significantly more values in the middle but no other major changes. This should make some intuitive sense: I replaced the NA values with mean values so we're just adding more to the most common values in the steps column. 
