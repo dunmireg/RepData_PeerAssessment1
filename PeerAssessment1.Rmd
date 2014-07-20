@@ -90,3 +90,18 @@ median(totSteps2$steps)
 ```
 
 This is interesting: the mean and median remain virtually unchanged and the histogram shows significantly more values in the middle but no other major changes. This should make some intuitive sense: I replaced the NA values with mean values so we're just adding more to the most common values in the steps column. 
+
+##Part 5: Weekday vs Weekend Activity
+Now I would like to take a look at activity on the weekend vs on the weekday. I'll add a new character vector called dayType and fill in with all "weekday"s. Then I'll use the weekdays function and coerce the date column (using as.Date()) to determine which days are actually weekends, and change the dayType character to the correct type (weekend).
+
+```{r}
+newdata$dayType <- c("weekday")
+weekend <- weekdays(as.Date(newdata$date)) %in% c("Saturday", "Sunday")
+newdata$dayType[weekend == TRUE] <- "weekend"
+newdata$dayType <- as.factor(newdata$dayType)
+```
+
+```{r}
+avgStepsWeek <- aggregate(steps ~ interval + dayType, data = newdata, FUN = mean)
+ggplot(avgStepsWeek, aes(interval, steps)) + geom_line() + facet_grid(dayType~.) + xlab("5 min interval") + ylab("Number of steps")
+```
